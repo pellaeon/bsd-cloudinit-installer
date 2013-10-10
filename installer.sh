@@ -18,8 +18,9 @@ rm -vf $SSH_DIR/ssh_host*
 touch $RC_TMP_FILE
 RC_STARTLINE=`cat -n /etc/rc | awk '/rc.subr/ { print $1 }'`
 RC_ENDLINE=`cat -n /etc/rc | tail -n 1 | awk '{ print $1 }'`
-cp -pvf /etc/rc /etc/rc.orig
+RC_BACKUP_FILE='/etc/rc.orig'
+cp -pvf /etc/rc $RC_BACKUP_FILE
 head -n $RC_STARTLINE /etc/rc > $RC_TMP_FILE
-echo "(cd /root/bsd-cloudinit-master/ && $PYTHON ./cloudinit)" >> $RC_TMP_FILE
+echo "(cd /root/bsd-cloudinit-master/ && $PYTHON ./cloudinit && mv $RC_BACKUP_FILE /etc/rc )" >> $RC_TMP_FILE
 tail -n `expr $RC_ENDLINE -  $RC_STARTLINE` /etc/rc >> $RC_TMP_FILE
 cp -pvf $RC_TMP_FILE /etc/rc
