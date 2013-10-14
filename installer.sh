@@ -9,11 +9,11 @@ RC_ENDLINE=`cat -n $RC_SCRIPT_FILE | tail -n 1 | awk '{ print $1 }'`
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
 
-[ ! -x "/usr/local/bin/python2.7" ] && { 
+[ ! `which python2.7` ] && {
 	echo 'python2.7 Not Found !' 
 	exit 1
 	}
-PYTHON="/usr/local/bin/python2.7"
+PYTHON=`which python2.7`
 
 fetch -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
