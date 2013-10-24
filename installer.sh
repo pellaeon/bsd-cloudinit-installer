@@ -37,3 +37,5 @@ do
 			;;
 	esac
 done
+
+echo "" > /root/.history
