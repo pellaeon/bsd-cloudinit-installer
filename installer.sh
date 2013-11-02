@@ -38,4 +38,8 @@ do
 	esac
 done
 
-echo "" > /root/.history
+# Readme - clean history
+echo "==================================================="
+echo "If you want to clean the tcsh history, please issue"
+echo "    # set history = 0"
+echo "==================================================="
