@@ -17,8 +17,10 @@ fetch -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
 rm -vf $SSH_DIR/ssh_host*
 
-cp -pvf $RC_SCRIPT_FILE $RC_BACKUP_FILE
-echo "(cd /root/bsd-cloudinit-master/ && $PYTHON ./cloudinit --log-file /tmp/officialci.log && cp -pvf $RC_BACKUP_FILE $RC_SCRIPT_FILE ) &" >> $RC_SCRIPT_FILE
+touch $RC_SCRIPT_FILE
+cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
+echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/officialci.log" >> $RC_SCRIPT_FILE
+echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
 
 # Get the active NIC and set it to use dhcp.
 for i in `ifconfig -u -l`
