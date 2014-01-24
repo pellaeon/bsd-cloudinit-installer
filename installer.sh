@@ -13,7 +13,7 @@ BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 	}
 PYTHON=`which python2.7`
 
-fetch -o - $BSDINIT_URL | tar -xzvf - -C '/root'
+fetch --no-verify-peer -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
 rm -vf $SSH_DIR/ssh_host*
 
