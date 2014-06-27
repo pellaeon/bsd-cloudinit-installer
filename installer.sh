@@ -6,6 +6,22 @@ RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
+BSD_VERSION=`uname -r |cut -d. -f 1`
+INSTALL_PKGS='py27-setuptools'
+VERIFY_PEER=''
+
+# For FreeBSD10 get root certs and use them
+if [ "$BSD_VERSION" -ge 10 ];then
+    INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
+    VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+fi
+
+
+# INstall our prerequisites
+pkg install $INSTALL_PKGS
+PATH=$PATH:/usr/local/bin
+easy_install eventlet
+easy_install iso8601
 
 [ ! `which python2.7` ] && {
 	echo 'python2.7 Not Found !' 
@@ -13,7 +29,7 @@ BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 	}
 PYTHON=`which python2.7`
 
-fetch --no-verify-peer -o - $BSDINIT_URL | tar -xzvf - -C '/root'
+fetch $VERIFY_PEER -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
 rm -vf $SSH_DIR/ssh_host*
 
