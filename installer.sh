@@ -1,25 +1,22 @@
 #!/bin/sh
 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 SSH_DIR=/etc/ssh
 RC_SCRIPT_FILE='/etc/rc.local'
 RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
-BSD_VERSION=`uname -r |cut -d. -f 1`
-INSTALL_PKGS='py27-setuptools'
-VERIFY_PEER=''
+BSD_VERSION=`uname -r | cut -d. -f 1`
+INSTALL_PKGS='devel/py-setuptools'
 
-# For FreeBSD10 get root certs and use them
-if [ "$BSD_VERSION" -ge 10 ];then
-    INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
-    VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
-fi
+# Get root certs and use them
+INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
+VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
 
 
-# INstall our prerequisites
+# Install our prerequisites
 pkg install $INSTALL_PKGS
-PATH=$PATH:/usr/local/bin
 easy_install eventlet
 easy_install iso8601
 
@@ -35,7 +32,7 @@ rm -vf $SSH_DIR/ssh_host*
 
 touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
-echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/officialci.log" >> $RC_SCRIPT_FILE
+echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/official.log" >> $RC_SCRIPT_FILE
 echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
 
 # Get the active NIC and set it to use dhcp.
