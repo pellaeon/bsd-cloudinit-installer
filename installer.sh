@@ -16,6 +16,7 @@ VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
 
 
 # Install our prerequisites
+export ASSUME_ALWAYS_YES=yes
 pkg install $INSTALL_PKGS
 easy_install eventlet
 easy_install iso8601

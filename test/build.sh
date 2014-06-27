@@ -43,4 +43,3 @@ $CHROOT_EXEC '/root/installer.sh' || {
 	echo "Build failed in ${BSD_VERSION}-RELEASE!"
 	exit 1
 }
-$CHROOT_EXEC
