@@ -3,20 +3,23 @@
 RM='rm'
 MKDIR='mkdir -p'
 
-BSD_CLOUDINIT='../installer.sh'
+INSTALLER_DIR=$(dirname `realpath $0`)
+BSD_CLOUDINIT="${INSTALLER_DIR}/../installer.sh"
 
-BSD_VERSION='10.0'
+BSD_VERSION=`uname -r`
 FTP_MIRROR='ftp.tw.freebsd.org'
-BASE_URL="ftp://${FTP_MIRROR}/pub/FreeBSD/releases/amd64/${BSD_VERSION}-RELEASE/"
+BASE_URL="ftp://${FTP_MIRROR}/pub/FreeBSD/releases/amd64/${BSD_VERSION}/"
 
-TEST_BASE_DIR="base_${BSD_VERSION}"
+TEST_BASE_DIR="/home/jails/cloudinit/"
+JAILS_NAME='cloudinit'
 
 if [ -e "$TEST_BASE_DIR" ]
 then
+	service jail stop $JAILS_NAME
 	chflags -R noschg $TEST_BASE_DIR
-	$RM -rf $TEST_BASE_DIR
+	$RM -rf $TEST_BASE_DIR/*
 fi
-$MKDIR $TEST_BASE_DIR
+$MKDIR -p $TEST_BASE_DIR
 
 (
 	BASE_FILENAME='base.txz'
@@ -24,22 +27,14 @@ $MKDIR $TEST_BASE_DIR
 	fetch ${BASE_URL}/${BASE_FILENAME}
 	tar jxf $BASE_FILENAME
 	$RM $BASE_FILENAME
-	# copy network config
-	cp /etc/resolv.conf ./etc/
-	# prepare fake uname
-	UNAME_PATH='./usr/bin/uname'
-	rm $UNAME_PATH
-	echo "#!/bin/sh
-	echo ${BSD_VERSION}-RELEASE
-	" > $UNAME_PATH
-	chmod +x $UNAME_PATH
+	# network config
+	echo "nameserver 8.8.8.8"> ./etc/resolv.conf
 )
 cp $BSD_CLOUDINIT ${TEST_BASE_DIR}/root/
 
-CH_PATH='/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin'
-CHROOT_EXEC="env -i SHELL=/bin/sh PATH=${CH_PATH} chroot $TEST_BASE_DIR"
+service jail start $JAILS_NAME
 
-$CHROOT_EXEC '/root/installer.sh' || {
-	echo "Build failed in ${BSD_VERSION}-RELEASE!"
+jexec $JAILS_NAME sh '/root/installer.sh' || {
+	echo "Build failed in ${BSD_VERSION}!"
 	exit 1
 }
