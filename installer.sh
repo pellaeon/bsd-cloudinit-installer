@@ -8,7 +8,10 @@ RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
 BSD_VERSION=`uname -r | cut -d. -f 1`
-INSTALL_PKGS='devel/py-setuptools'
+INSTALL_PKGS='
+	lang/python27
+	devel/py-setuptools
+	'
 VERIFY_PEER=''
 
 # For FreeBSD10 get root certs and use them
