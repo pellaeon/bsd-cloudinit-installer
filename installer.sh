@@ -10,9 +10,11 @@ BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 BSD_VERSION=`uname -r | cut -d. -f 1`
 INSTALL_PKGS='devel/py-setuptools'
 
-# Get root certs and use them
-INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
-VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+# For FreeBSD10 get root certs and use them
+if [ "$BSD_VERSION" -ge 10 ];then
+	INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
+	VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+fi
 
 
 # Install our prerequisites
