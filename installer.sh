@@ -11,6 +11,7 @@ BSD_VERSION=`uname -r | cut -d. -f 1`
 INSTALL_PKGS='
 	lang/python27
 	devel/py-setuptools
+	security/sudo
 	'
 VERIFY_PEER=''
 
@@ -39,7 +40,7 @@ rm -vf $SSH_DIR/ssh_host*
 
 touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
-echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/official.log" >> $RC_SCRIPT_FILE
+echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
 echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
 
 # Get the active NIC and set it to use dhcp.
