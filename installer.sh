@@ -40,7 +40,7 @@ rm -vf $SSH_DIR/ssh_host*
 
 touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
-echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
+echo "$PYTHON /root/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
 echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
 
 # Output to OpenStack console log
