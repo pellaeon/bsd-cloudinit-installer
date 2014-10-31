@@ -43,6 +43,11 @@ cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
 echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
 echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
 
+# Output to OpenStack console log
+echo 'console="comconsole,vidconsole"' >> /boot/loader.conf
+# Bootloader menu delay
+echo 'autoboot_delay="1"' >> /boot/loader.conf
+
 # Get the active NIC and set it to use dhcp.
 for i in `ifconfig -u -l`
 do
