@@ -62,7 +62,7 @@ do
 done
 
 # Allow %wheel to become root with no password
-sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL' /usr/local/etc/sudoers
+sed -i '' 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /usr/local/etc/sudoers
 
 # Readme - clean history
 echo "==================================================="
