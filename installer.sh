@@ -10,7 +10,7 @@ BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 BSD_VERSION=`uname -r | cut -d. -f 1`
 INSTALL_PKGS='
 	lang/python27
-	devel/py-setuptools
+	devel/py-pip
 	security/sudo
 	'
 VERIFY_PEER=''
@@ -25,8 +25,6 @@ fi
 # Install our prerequisites
 export ASSUME_ALWAYS_YES=yes
 pkg install $INSTALL_PKGS
-easy_install eventlet
-easy_install iso8601
 
 [ ! `which python2.7` ] && {
 	echo 'python2.7 Not Found !' 
@@ -35,6 +33,8 @@ easy_install iso8601
 PYTHON=`which python2.7`
 
 fetch $VERIFY_PEER -o - $BSDINIT_URL | tar -xzvf - -C '/root'
+
+pip install -r "/root/bsd-cloudinit-master/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
 
