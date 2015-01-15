@@ -8,18 +8,23 @@ RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
 BSD_VERSION=`uname -r | cut -d. -f 1`
-INSTALL_PKGS='devel/py-setuptools'
+INSTALL_PKGS='
+	lang/python27
+	devel/py-pip
+	security/sudo
+	'
+VERIFY_PEER=''
 
-# Get root certs and use them
-INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
-VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+# For FreeBSD10 get root certs and use them
+if [ "$BSD_VERSION" -ge 10 ];then
+	INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
+	VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+fi
 
 
 # Install our prerequisites
 export ASSUME_ALWAYS_YES=yes
 pkg install $INSTALL_PKGS
-easy_install eventlet
-easy_install iso8601
 
 [ ! `which python2.7` ] && {
 	echo 'python2.7 Not Found !' 
@@ -29,12 +34,19 @@ PYTHON=`which python2.7`
 
 fetch $VERIFY_PEER -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
+pip install -r "/root/bsd-cloudinit-master/requirements.txt"
+
 rm -vf $SSH_DIR/ssh_host*
 
 touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
-echo "$PYTHON /root/bsd-cloudinit-master/cloudinit --log-file /tmp/official.log" >> $RC_SCRIPT_FILE
+echo "$PYTHON /root/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
 echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
+
+# Output to OpenStack console log
+echo 'console="comconsole,vidconsole"' >> /boot/loader.conf
+# Bootloader menu delay
+echo 'autoboot_delay="1"' >> /boot/loader.conf
 
 # Get the active NIC and set it to use dhcp.
 for i in `ifconfig -u -l`
@@ -53,6 +65,9 @@ do
 			;;
 	esac
 done
+
+# Allow %wheel to become root with no password
+sed -i '' 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /usr/local/etc/sudoers
 
 # Readme - clean history
 echo "==================================================="
