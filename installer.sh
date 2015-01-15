@@ -5,7 +5,7 @@ SSH_DIR=/etc/ssh
 RC_SCRIPT_FILE='/etc/rc.local'
 RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
-BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
+BSDINIT_URL='https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz'
 VERIFY_PEER='--ca-cert=/usr/local/share/certs/ca-root-nss.crt'
 FETCH="fetch ${VERIFY_PEER}"
 
@@ -99,7 +99,7 @@ done
 sed -i '' 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /usr/local/etc/sudoers
 
 # Readme - clean history
-echo "==================================================="
-echo "If you want to clean the tcsh history, please issue"
-echo "    # set history = 0"
-echo "==================================================="
+echo '==================================================='
+echo 'If you want to clean the tcsh history, please issue'
+echo '    # set history = 0'
+echo '==================================================='
