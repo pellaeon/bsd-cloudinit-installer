@@ -67,7 +67,7 @@ cp $BSD_CLOUDINIT ${TEST_BASE_DIR}/root/
 $JAIL -c $JAIL_NAME
 
 echo_box "Start installer testing"
-export BSD_CLOUDINIT_DEBUG=yes
+export BSDINIT_DEBUG=yes
 jexec $JAIL_NAME sh '/root/installer.sh' || {
 	echo_box "Installer testing failed in ${BSD_VERSION}!"
 	exit 1

@@ -7,19 +7,39 @@ RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
 
-BSD_VERSION=`uname -r | cut -d. -f 1`
 INSTALL_PKGS='
 	lang/python27
 	devel/py-pip
 	security/sudo
 	'
-VERIFY_PEER=''
 
-# For FreeBSD10 get root certs and use them
-if [ "$BSD_VERSION" -ge 10 ];then
-	INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
-	VERIFY_PEER="--ca-cert=/usr/local/share/certs/ca-root-nss.crt"
+echo_debug() {
+	echo '[debug] '$1
+}
+
+# Get freebsd version
+if uname -K > /dev/null 2>&1
+then
+	BSD_VERSION=`uname -K`
+else
+	_BSD_VERSION=`uname -r | cut -d'-' -f 1`
+	BSD_VERSION=$(printf "%d%02d%03d" `echo ${_BSD_VERSION} | cut -d'.' -f 1` `echo ${_BSD_VERSION} | cut -d'.' -f 2` 0)
 fi
+
+if [ $BSDINIT_DEBUG ]
+then
+	echo_debug "BSD_VERSION = $BSD_VERSION"
+fi
+
+# For FreeBSD 10 or 9.3+ get root certs and use them
+if [ "$BSD_VERSION" -ge 903000 ]
+then
+	INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
+	VERIFY_PEER='--ca-cert=/usr/local/share/certs/ca-root-nss.crt'
+else
+	VERIFY_PEER=''
+fi
+
 
 
 # Install our prerequisites
@@ -27,14 +47,14 @@ export ASSUME_ALWAYS_YES=yes
 pkg install $INSTALL_PKGS
 
 [ ! `which python2.7` ] && {
-	echo 'python2.7 Not Found !' 
+	echo 'python2.7 Not Found !'
 	exit 1
-	}
+}
 PYTHON=`which python2.7`
 
 fetch $VERIFY_PEER -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
-pip install -r "/root/bsd-cloudinit-master/requirements.txt"
+pip install -r '/root/bsd-cloudinit-master/requirements.txt'
 
 rm -vf $SSH_DIR/ssh_host*
 
