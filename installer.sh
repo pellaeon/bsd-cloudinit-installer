@@ -6,16 +6,30 @@ RC_SCRIPT_FILE='/etc/rc.local'
 RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 BSDINIT_URL="https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz"
+VERIFY_PEER='--ca-cert=/usr/local/share/certs/ca-root-nss.crt'
+FETCH="fetch ${VERIFY_PEER}"
+
 
 INSTALL_PKGS='
 	lang/python27
 	devel/py-pip
 	security/sudo
+	security/ca_root_nss
 	'
 
+
+##############################################
+#  utils
+##############################################
+	
 echo_debug() {
 	echo '[debug] '$1
 }
+
+
+##############################################
+#  main block
+##############################################
 
 # Get freebsd version
 if uname -K > /dev/null 2>&1
@@ -31,16 +45,11 @@ then
 	echo_debug "BSD_VERSION = $BSD_VERSION"
 fi
 
-# For FreeBSD 10 or 9.3+ get root certs and use them
-if [ "$BSD_VERSION" -ge 903000 ]
+if [ "$BSD_VERSION" -lt 903000 ]
 then
-	INSTALL_PKGS="$INSTALL_PKGS ca_root_nss"
-	VERIFY_PEER='--ca-cert=/usr/local/share/certs/ca-root-nss.crt'
-else
-	VERIFY_PEER=''
+	echo 'Oops! Your freebsd version is too old and not supported!'
+	exit 1
 fi
-
-
 
 # Install our prerequisites
 export ASSUME_ALWAYS_YES=yes
@@ -52,7 +61,7 @@ pkg install $INSTALL_PKGS
 }
 PYTHON=`which python2.7`
 
-fetch $VERIFY_PEER -o - $BSDINIT_URL | tar -xzvf - -C '/root'
+$FETCH -o - $BSDINIT_URL | tar -xzvf - -C '/root'
 
 pip install -r '/root/bsd-cloudinit-master/requirements.txt'
 
