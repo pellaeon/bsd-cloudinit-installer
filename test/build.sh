@@ -27,10 +27,10 @@ echo_box() {
 }
 clean_base() {
 	$JAIL -r $JAIL_NAME
-	printf "Remove tester base file..."
+	printf 'Remove tester base file...'
 	chflags -R noschg $TEST_BASE_DIR
 	$RM -rf $TEST_BASE_DIR/*
-	printf "done\n"
+	printf 'done\n'
 }
 
 
@@ -38,12 +38,29 @@ clean_base() {
 #  main block
 ##############################################
 
-case $1 in
-	clean )
-		clean_base
-		exit 0;
-		;;
-esac
+args=`getopt t: $*`
+
+if [ $? -ne 0 ]
+then
+	exit 1
+fi
+while [ 1 ]
+do
+	case $1 in
+		-t )
+			JAIL_NAME=$2
+			shift; shift;
+			;;
+		clean )
+			clean_base
+			exit 0;
+			;;
+		-- )
+			shift
+			;;
+	esac
+done
+exit
 
 if [ -e "$TEST_BASE_DIR" ]
 then
@@ -57,11 +74,11 @@ $MKDIR -p $TEST_BASE_DIR
 	cd $TEST_BASE_DIR
 	echo "fetch base file: ${BASE_URL}/${BASE_FILENAME}"
 	fetch ${BASE_URL}/${BASE_FILENAME}
-	printf "extract base file..."
+	printf 'extract base file...'
 	tar Jxf $BASE_FILENAME
 	$RM $BASE_FILENAME
-	printf "done\n"
-	echo "nameserver 8.8.8.8"> ./etc/resolv.conf
+	printf 'done\n'
+	echo 'nameserver 8.8.8.8'> ./etc/resolv.conf
 )
 cp $BSD_CLOUDINIT ${TEST_BASE_DIR}/root/
 
@@ -73,4 +90,4 @@ jexec $JAIL_NAME sh '/root/installer.sh' || {
 	echo_box "Installer testing failed in ${BSD_VERSION}!"
 	exit 1
 }
-echo_box "Installer testing finished"
+echo_box 'Installer testing finished'
