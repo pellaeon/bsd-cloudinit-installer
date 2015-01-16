@@ -3,17 +3,25 @@
 RM='rm'
 MKDIR='mkdir -p'
 
-INSTALLER_DIR=$(dirname `realpath $0`)
-BSD_CLOUDINIT="${INSTALLER_DIR}/../installer.sh"
+BUILDER_DIR=$(dirname `realpath $0`)
+BUILDER_CONF="${BUILDER_DIR}/build.conf"
+
+. $BUILDER_CONF
+
+BSD_CLOUDINIT="${BUILDER_DIR}/../installer.sh"
 
 BSD_VERSION=`uname -r`
 FTP_MIRROR='ftp.tw.freebsd.org'
 BASE_URL="ftp://${FTP_MIRROR}/pub/FreeBSD/releases/amd64/${BSD_VERSION}/"
 
-TEST_BASE_DIR="${INSTALLER_DIR}/base"
+TEST_BASE_DIR="${BUILDER_DIR}/base"
 JAIL_CONF='/etc/jail.conf'
 JAIL_NAME='tester'
 JAIL="jail -f $JAIL_CONF"
+MD_UNIT=0
+MD_DEV="md$MD_UNIT"
+MD_FILE="${BUILDER_DIR}/tester.raw"
+BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 
 ##############################################
@@ -30,6 +38,11 @@ clean_base() {
 	printf 'Remove tester base file...'
 	chflags -R noschg $TEST_BASE_DIR
 	$RM -rf $TEST_BASE_DIR/*
+	if mdconfig -l -u $MD_UNIT > /dev/null 2>&1
+	then
+		mdconfig -d -u $MD_UNIT
+		echo "$MD_DEV removed..."
+	fi
 	printf 'done\n'
 }
 
@@ -44,7 +57,7 @@ if [ $? -ne 0 ]
 then
 	exit 1
 fi
-while [ 1 ]
+while [ $1 ]
 do
 	case $1 in
 		-t )
@@ -60,34 +73,34 @@ do
 			;;
 	esac
 done
-exit
 
 if [ -e "$TEST_BASE_DIR" ]
 then
 	clean_base
 fi
 
-$MKDIR -p $TEST_BASE_DIR
+$MKDIR $TEST_BASE_DIR
 
-(
-	BASE_FILENAME='base.txz'
-	cd $TEST_BASE_DIR
-	echo "fetch base file: ${BASE_URL}/${BASE_FILENAME}"
-	fetch ${BASE_URL}/${BASE_FILENAME}
-	printf 'extract base file...'
-	tar Jxf $BASE_FILENAME
-	$RM $BASE_FILENAME
-	printf 'done\n'
-	echo 'nameserver 8.8.8.8'> ./etc/resolv.conf
-)
-cp $BSD_CLOUDINIT ${TEST_BASE_DIR}/root/
-
-$JAIL -c $JAIL_NAME
-
-echo_box "Start installer testing"
-export BSDINIT_DEBUG=yes
-jexec $JAIL_NAME sh '/root/installer.sh' || {
-	echo_box "Installer testing failed in ${BSD_VERSION}!"
+# prepare md
+mdconfig -f $MD_FILE -u 0
+[ $? -ne 0 ] && {
+	echo "Create $MD_DEV failed"
 	exit 1
 }
-echo_box 'Installer testing finished'
+
+# bsdinstall script
+export DISTRIBUTIONS='kernel.txz base.txz'
+export BSDINSTALL_DISTSITE=$BASE_URL
+export BSDINSTALL_CHROOT=$TEST_BASE_DIR
+export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
+export PARTITIONS=$MD_DEV
+
+bsdinstall checksum
+if [ $? -ne 0 ] || [ ! -f $BSDINSTALL_DISTDIR/kernel.txz ] || [ ! -f $BSDINSTALL_DISTDIR/base.txz ]
+then
+	$MKDIR $BSDINSTALL_DISTDIR
+	bsdinstall distfetch
+fi
+
+bsdinstall scriptedpart $MD_DEV { auto freebsd-ufs / }
+bsdinstall script $BSDINSTALL_SCRIPT
