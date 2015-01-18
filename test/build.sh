@@ -25,18 +25,38 @@ export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
 export PARTITIONS=$MD_DEV
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
+# virtualenv and openstack command line client
+
 . $BUILDER_CONF
 
 ##############################################
 #  util functions
 ##############################################
 
-echo_box() {
+echo_box() { #{{{
 	echo "=============================================="
 	echo "# $1"
 	echo "=============================================="
-}
-clean_base() {
+} #}}}
+
+umount_base() { #{{{
+	for dir in '/dev' ''
+	do
+		if [ ! $TEST_BASE_DIR ]
+		then
+			echo 'Base dir not found.'
+			exit 1
+		fi
+		_d=${TEST_BASE_DIR}${dir}
+		if mount | cut -d' ' -f 3 | egrep "^${_d}$" > /dev/null
+		then
+			echo "umount ${_d}"
+			umount "${_d}"
+		fi
+	done
+} #}}}
+
+clean_base() { #{{{
 	if [ -e "$TEST_BASE_DIR" ]
 	then
 		printf 'Remove tester base file...'
@@ -51,11 +71,18 @@ clean_base() {
 		printf 'done\n'
 	fi
 
-	if [ -e "" ]
-	then
-		printf 'remove virtualenv...'
-	fi
-}
+	# if [ -e "" ]
+	# then
+	# 	printf 'remove virtualenv...'
+	# 	$RM -r 
+	# fi
+} #}}}
+
+cleanup() { #{{{
+	echo_box "Cleanup"
+	umount_base
+	clean_base
+} #}}}
 
 
 ##############################################
@@ -76,7 +103,7 @@ do
 			shift; shift;
 			;;
 		clean )
-			clean_base
+			cleanup
 			exit 0;
 			;;
 		-- )
@@ -85,7 +112,8 @@ do
 	esac
 done
 
-clean_base
+cleanup
+
 $MKDIR $TEST_BASE_DIR
 
 # prepare md
@@ -104,8 +132,12 @@ then
 fi
 
 bsdinstall scriptedpart $MD_DEV { auto freebsd-ufs / }
-bsdinstall script $BSDINSTALL_SCRIPT
+bsdinstall script $BSDINSTALL_SCRIPT || {
+	cleanup
+	exit 1
+}
 
-# prepare virtualenv
+# prepare virtualenv and pip
+
 
 # upload to nova
