@@ -104,11 +104,12 @@ cleanup() { #{{{
 
 attach_md() { #{{{
 	# attach memory disk
-	mdconfig -f $MD_FILE -u 0
+	mdconfig -f $MD_FILE -u $MD_UNIT
 	[ $? -ne 0 ] && {
 		echo "Attach $MD_FILE to $MD_DEV failed"
 		exit 1
 	}
+	mdconfig -l -u $MD_UNIT
 } #}}}
 
 
