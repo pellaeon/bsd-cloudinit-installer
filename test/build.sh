@@ -79,7 +79,7 @@ clean_base() { #{{{
 	fi
 } #}}}
 
-clean_venv() {#{{{
+clean_venv() { #{{{
 	if [ -e $VENV_DIR ]
 	then
 		printf 'remove virtualenv...'
