@@ -182,3 +182,4 @@ env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/inc
 $PIP install -r $PIP_REQUIREMENTS
 
 # upload image
+python $BUILDER_DIR/tools/image.py
