@@ -61,7 +61,7 @@ umount_base() { #{{{
 umount_md() { #{{{
 	if mdconfig -l -u $MD_UNIT > /dev/null 2>&1
 	then
-		printf "$MD_DEV removed..."
+		printf "$MD_DEV deattach..."
 		mdconfig -d -u $MD_UNIT || {
 			echo 'failed'
 			exit 1
@@ -148,9 +148,11 @@ bsdinstall script $BSDINSTALL_SCRIPT || {
 # prepare virtualenv and pip
 virtualenv $VENV_DIR
 . $VENV_DIR/bin/activate
-pip --upgrade pip
+pip install --upgrade pip
+env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" pip install cryptography
+pip install -r $PIP_REQUIREMENTS
 
-# upload to nova
+# upload image
 
 
 cleanup
