@@ -27,7 +27,8 @@ BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # virtualenv and openstack command line client
 VENV_DIR="$TEST_BASE_DIR/.venv"
-PIP_REQUIREMENTS="$TEST_BASE_DIR/pip_requirements.txt"
+PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
+PIP='pip --no-cache-dir'
 
 . $BUILDER_CONF
 
@@ -148,9 +149,9 @@ bsdinstall script $BSDINSTALL_SCRIPT || {
 # prepare virtualenv and pip
 virtualenv $VENV_DIR
 . $VENV_DIR/bin/activate
-pip install --upgrade pip
+$PIP install --upgrade pip
 env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" pip install cryptography
-pip install -r $PIP_REQUIREMENTS
+$PIP install -r $PIP_REQUIREMENTS
 
 # upload image
 
