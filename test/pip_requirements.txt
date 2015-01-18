@@ -1,1 +1,2 @@
 python-novaclient
+python-glanceclient

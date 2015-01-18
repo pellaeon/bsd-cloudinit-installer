@@ -28,7 +28,7 @@ BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 # virtualenv and openstack command line client
 VENV_DIR="$TEST_BASE_DIR/.venv"
 PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
-PIP='pip --no-cache-dir'
+PIP='pip'
 
 . $BUILDER_CONF
 
