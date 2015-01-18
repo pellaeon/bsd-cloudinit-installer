@@ -1,5 +1,6 @@
 #!/bin/sh
 
-BSDINIT_INSTALLER_URL='https://raw.githubusercontent.com/pellaeon/bsd-cloudinit-installer/master/installer.sh'
+export BSDINIT_INSTALLER_URL='https://raw.githubusercontent.com/pellaeon/bsd-cloudinit-installer/master/installer.sh'
 
 
+OPENSTACK_RC="$BUILDER_DIR/openstackrc.sh"

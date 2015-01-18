@@ -1,3 +1,6 @@
 test/base*
 test/*.raw
 test/*.conf
+test/dist
+.venv
+openstackrc.sh
