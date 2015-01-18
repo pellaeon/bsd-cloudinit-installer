@@ -26,6 +26,8 @@ export PARTITIONS=$MD_DEV
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # virtualenv and openstack command line client
+VENV_DIR="$TEST_BASE_DIR/.venv"
+PIP_REQUIREMENTS="$TEST_BASE_DIR/pip_requirements.txt"
 
 . $BUILDER_CONF
 
@@ -56,6 +58,18 @@ umount_base() { #{{{
 	done
 } #}}}
 
+umount_md() { #{{{
+	if mdconfig -l -u $MD_UNIT > /dev/null 2>&1
+	then
+		printf "$MD_DEV removed..."
+		mdconfig -d -u $MD_UNIT || {
+			echo 'failed'
+			exit 1
+		}
+		echo 'done'
+	fi
+} #}}}
+
 clean_base() { #{{{
 	if [ -e "$TEST_BASE_DIR" ]
 	then
@@ -63,25 +77,23 @@ clean_base() { #{{{
 		chflags -R noschg $TEST_BASE_DIR
 		$RM -rf $TEST_BASE_DIR
 	fi
+} #}}}
 
-	if mdconfig -l -u $MD_UNIT > /dev/null 2>&1
+clean_venv() {#{{{
+	if [ -e $VENV_DIR ]
 	then
-		printf "$MD_DEV removed..."
-		mdconfig -d -u $MD_UNIT
-		printf 'done\n'
+		printf 'remove virtualenv...'
+		$RM -r $VENV_DIR
+		echo 'done'
 	fi
-
-	# if [ -e "" ]
-	# then
-	# 	printf 'remove virtualenv...'
-	# 	$RM -r 
-	# fi
 } #}}}
 
 cleanup() { #{{{
 	echo_box "Cleanup"
 	umount_base
+	umount_md
 	clean_base
+	clean_venv
 } #}}}
 
 
@@ -98,10 +110,6 @@ fi
 while [ $1 ]
 do
 	case $1 in
-		-t )
-			JAIL_NAME=$2
-			shift; shift;
-			;;
 		clean )
 			cleanup
 			exit 0;
@@ -138,6 +146,11 @@ bsdinstall script $BSDINSTALL_SCRIPT || {
 }
 
 # prepare virtualenv and pip
-
+virtualenv $VENV_DIR
+. $VENV_DIR/bin/activate
+pip --upgrade pip
 
 # upload to nova
+
+
+cleanup
