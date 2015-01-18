@@ -12,17 +12,20 @@ BUILDER_DIR=$(dirname `realpath $0`)
 BUILDER_CONF="${BUILDER_DIR}/build.conf"
 TEST_BASE_DIR="${BUILDER_DIR}/base"
 
+# bsd cloudinit info
+export INSTALLER_REV=`git rev-parse --short  HEAD`
+
 # md
 MD_UNIT=0
-MD_DEV="md${MD_UNIT}"
-MD_FILE="${BUILDER_DIR}/tester.raw"
+export MD_DEV="md${MD_UNIT}"
+export MD_FILE="${BUILDER_DIR}/tester.raw"
 
 # bsdinstall
 export DISTRIBUTIONS='kernel.txz base.txz'
 export BSDINSTALL_DISTSITE="ftp://ftp.tw.freebsd.org/pub/FreeBSD/releases/amd64/`uname -r`/"
 export BSDINSTALL_CHROOT=$TEST_BASE_DIR
 export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
-export PARTITIONS=$MD_DEV
+export PARTITIONS="$MD_DEV gpt { auto freebsd-ufs / }"
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # virtualenv and openstack command line client
@@ -143,7 +146,6 @@ then
 	bsdinstall distfetch
 fi
 
-bsdinstall scriptedpart $MD_DEV { auto freebsd-ufs / }
 bsdinstall script $BSDINSTALL_SCRIPT || {
 	cleanup
 	exit 1
