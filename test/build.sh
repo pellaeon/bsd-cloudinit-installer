@@ -102,6 +102,16 @@ cleanup() { #{{{
 	clean_venv
 } #}}}
 
+attach_md { #{{{
+	# attach memory disk
+	mdconfig -f $MD_FILE -u 0
+	[ $? -ne 0 ] && {
+		echo "Create $MD_DEV failed"
+		exit 1
+	}
+} #}}}
+
+
 
 ##############################################
 #  main block
@@ -121,6 +131,13 @@ do
 		clean )
 			exit 0;
 			;;
+		mount )
+			trap : 0
+			$MKDIR $TEST_BASE_DIR
+			attach_md
+			bsdinstall mount
+			exit 0
+			;;
 		-- )
 			shift
 			;;
@@ -131,12 +148,7 @@ cleanup
 
 $MKDIR $TEST_BASE_DIR
 
-# prepare md
-mdconfig -f $MD_FILE -u 0
-[ $? -ne 0 ] && {
-	echo "Create $MD_DEV failed"
-	exit 1
-}
+attach_md
 
 # bsdinstall script
 bsdinstall checksum
