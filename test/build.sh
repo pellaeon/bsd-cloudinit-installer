@@ -144,6 +144,11 @@ do
 			umount_md
 			exit 0
 			;;
+		chroot )
+			trap : 0
+			chroot $BSDINSTALL_CHROOT tcsh
+			exit 0
+			;;
 		-- )
 			shift
 			;;
@@ -177,4 +182,3 @@ env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/inc
 $PIP install -r $PIP_REQUIREMENTS
 
 # upload image
-
