@@ -4,4 +4,4 @@ export BSDINIT_INSTALLER_URL='https://raw.githubusercontent.com/pellaeon/bsd-clo
 
 # openstack
 OS_RC="$BUILDER_DIR/openstackrc.sh"
-OS_IMG_NAME='flc-testing-build'
+export OS_IMG_NAME='flc-testing-build'
