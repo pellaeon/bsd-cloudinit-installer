@@ -13,7 +13,7 @@ BUILDER_CONF="${BUILDER_DIR}/build.conf"
 TEST_BASE_DIR="${BUILDER_DIR}/base"
 
 # bsd cloudinit info
-export INSTALLER_REV=`git rev-parse --short  HEAD`
+export INSTALLER_REV=`(cd ${BUILDER_DIR} && git rev-parse --short  HEAD)`
 
 # md
 MD_UNIT=0

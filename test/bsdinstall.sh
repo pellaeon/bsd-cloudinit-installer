@@ -9,7 +9,8 @@ INSTALLER='/root/install.sh'
 ##############################################
 
 cleanup(){
-	rm /etc/resolv.conf
+	rm -v /etc/resolv.conf
+	exit
 }
 
 
@@ -23,7 +24,7 @@ echo 'nameserver 8.8.8.8' > /etc/resolv.conf
 
 # Add gpt label
 gpart modify -i 2 -l rootfs $MD_DEV
-sed -i '' "s/$MD_DEVp2/gpt\/rootfs/" /etc/fstab
+sed -i '' "s/${MD_DEV}p2/gpt\/rootfs/" /etc/fstab
 
 # install bsd cloudinit
 
