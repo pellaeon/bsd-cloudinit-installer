@@ -31,6 +31,7 @@ PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
 PIP='pip'
 
 . $BUILDER_CONF
+. $OPENSTACK_RC
 
 ##############################################
 #  util functions
@@ -150,7 +151,7 @@ bsdinstall script $BSDINSTALL_SCRIPT || {
 virtualenv $VENV_DIR
 . $VENV_DIR/bin/activate
 $PIP install --upgrade pip
-env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" pip install cryptography
+env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" $PIP install cryptography
 $PIP install -r $PIP_REQUIREMENTS
 
 # upload image
