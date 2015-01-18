@@ -1,0 +1,5 @@
+#!/bin/sh
+
+BSDINIT_INSTALLER_URL='https://raw.githubusercontent.com/pellaeon/bsd-cloudinit-installer/master/installer.sh'
+
+
