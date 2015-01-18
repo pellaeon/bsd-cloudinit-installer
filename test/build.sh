@@ -106,7 +106,7 @@ attach_md() { #{{{
 	# attach memory disk
 	mdconfig -f $MD_FILE -u 0
 	[ $? -ne 0 ] && {
-		echo "Create $MD_DEV failed"
+		echo "Attach $MD_FILE to $MD_DEV failed"
 		exit 1
 	}
 } #}}}
@@ -136,6 +136,12 @@ do
 			$MKDIR $TEST_BASE_DIR
 			attach_md
 			bsdinstall mount
+			exit 0
+			;;
+		umount )
+			trap : 0
+			umount_base
+			umount_md
 			exit 0
 			;;
 		-- )
