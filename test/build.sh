@@ -18,11 +18,11 @@ MD_DEV="md${MD_UNIT}"
 MD_FILE="${BUILDER_DIR}/tester.raw"
 
 # bsdinstall
-DISTRIBUTIONS='kernel.txz base.txz'
-BSDINSTALL_DISTSITE="ftp://ftp.tw.freebsd.org/pub/FreeBSD/releases/amd64/`uname -r`/"
-BSDINSTALL_CHROOT=$TEST_BASE_DIR
-BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
-PARTITIONS=$MD_DEV
+export DISTRIBUTIONS='kernel.txz base.txz'
+export BSDINSTALL_DISTSITE="ftp://ftp.tw.freebsd.org/pub/FreeBSD/releases/amd64/`uname -r`/"
+export BSDINSTALL_CHROOT=$TEST_BASE_DIR
+export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
+export PARTITIONS=$MD_DEV
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 . $BUILDER_CONF
