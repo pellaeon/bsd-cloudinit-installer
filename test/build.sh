@@ -34,7 +34,7 @@ PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
 PIP='pip'
 
 . $BUILDER_CONF
-. $OPENSTACK_RC
+. $OS_RC
 
 ##############################################
 #  util functions
@@ -102,7 +102,7 @@ cleanup() { #{{{
 	clean_venv
 } #}}}
 
-attach_md { #{{{
+attach_md() { #{{{
 	# attach memory disk
 	mdconfig -f $MD_FILE -u 0
 	[ $? -ne 0 ] && {
