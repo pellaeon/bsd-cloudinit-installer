@@ -78,6 +78,7 @@ clean_base() { #{{{
 		printf 'Remove tester base file...'
 		chflags -R noschg $TEST_BASE_DIR
 		$RM -rf $TEST_BASE_DIR
+		echo 'done'
 	fi
 } #}}}
 
@@ -103,6 +104,8 @@ cleanup() { #{{{
 #  main block
 ##############################################
 
+trap 'cleanup' 0 1 2 15
+
 args=`getopt t: $*`
 
 if [ $? -ne 0 ]
@@ -113,7 +116,6 @@ while [ $1 ]
 do
 	case $1 in
 		clean )
-			cleanup
 			exit 0;
 			;;
 		-- )
@@ -156,5 +158,3 @@ $PIP install -r $PIP_REQUIREMENTS
 
 # upload image
 
-
-cleanup
