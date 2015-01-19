@@ -25,7 +25,7 @@ export DISTRIBUTIONS='kernel.txz base.txz'
 export BSDINSTALL_DISTSITE="ftp://ftp.tw.freebsd.org/pub/FreeBSD/releases/amd64/`uname -r`/"
 export BSDINSTALL_CHROOT=$TEST_BASE_DIR
 export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
-export PARTITIONS="$MD_DEV gpt { auto freebsd-ufs / }"
+export PARTITIONS="$MD_DEV { auto freebsd-ufs / }"
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # virtualenv and openstack command line client
@@ -186,7 +186,7 @@ then
 	$MKDIR $BSDINSTALL_DISTDIR
 	bsdinstall distfetch
 fi
-
+bsdinstall scriptedpart $PARTITIONS
 bsdinstall script $BSDINSTALL_SCRIPT || {
 	cleanup
 	exit 1
