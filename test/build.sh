@@ -113,7 +113,11 @@ attach_md() { #{{{
 } #}}}
 
 upload_img() { #{{{
-	python2 $BUILDER_DIR/tools/image.py
+	python2 $BUILDER_DIR/tools/image.py $1
+} #}}}
+
+boot_img() { #{{{
+	python2 $BUILDER_DIR/tools/compute.py
 } #}}}
 
 
@@ -155,7 +159,12 @@ do
 			;;
 		upload )
 			trap : 0
-			upload_img
+			upload_img $2
+			exit 0
+			;;
+		boot )
+			trap : 0
+			boot_img
 			exit 0
 			;;
 		-- )

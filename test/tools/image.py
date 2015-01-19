@@ -14,16 +14,28 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE']):
+def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE'], img_format=None):
     """
-    create or update the ``env['OS_IMG_NAME']``
+    Create the ``env['OS_IMG_NAME']``.
+    If there is a same name image, we will delete it and upload a new one.
+
+    :type img_format: str
+    :param img_format: The format of image.
+        If none is provided, we using the subfilename or raw.
     """
     img_list = list(glance.images.list())
+
+    disk_format = img_format
+    if not img_format:
+        if len(img_path.split('.')) != 1:
+            disk_format = img_path.split('.')[-1]
+        else:
+            disk_format = 'raw'
 
     img_args = {
         'name': img_name,
         'is_public': 'False',
-        'disk_format': 'raw',
+        'disk_format': disk_format,
         'container_format': 'bare',
         'description': "\r".join([
                 "uname: {0}".format(check_output(['uname', '-msKr']).strip('\n')),
@@ -55,4 +67,8 @@ def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE']):
 
 
 if __name__ == '__main__':
-    upload()
+    from sys import argv
+    try:
+        upload(img_path=argv[1])
+    except Exception as e:
+        upload()
