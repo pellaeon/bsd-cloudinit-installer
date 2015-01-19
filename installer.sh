@@ -93,6 +93,7 @@ echo 'console="comconsole,vidconsole"' >> $LOADER_CONF
 # Bootloader menu delay
 echo 'autoboot_delay="1"' >> $LOADER_CONF
 
+echo_bsdinit_stamp >> $RC_CONF
 # Get the active NIC and set it to use dhcp
 for i in `ifconfig -u -l`
 do
@@ -104,12 +105,16 @@ do
 		'pflog0')
 			;;
 		*)
-			echo_bsdinit_stamp >> $RC_CONF
 			echo 'ifconfig_'${i}'="DHCP"' >> $RC_CONF
 			break;
 			;;
 	esac
 done
+# Enabel sshd in rc.conf
+if ! /usr/bin/egrep '^sshd_enable' > /dev/null
+then
+	echo 'sshd_enable="YES"' >> $RC_CONF
+fi
 
 # Allow %wheel to become root with no password
 sed -i '' 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /usr/local/etc/sudoers
