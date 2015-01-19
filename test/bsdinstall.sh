@@ -1,12 +1,11 @@
 #!/bin/sh
 
 
-cp $BSDINIT_INSTALLER_FILE "$BSDINSTALL_CHROOT/root/installer.sh"
+cp $BSDINIT_INSTALLER_FILE "$BSDINSTALL_CHROOT/installer.sh"
 
 
 #!/bin/sh
 
-FETCH='fetch --no-verify-peer'
 INSTALLER='/root/installer.sh'
 
 ##############################################
@@ -26,6 +25,8 @@ cleanup(){ #{{{
 trap 'cleanup' 0 1 2 15
 
 set -e
+
+mv '/installer.sh' $INSTALLER
 
 echo 'nameserver 8.8.8.8' > /etc/resolv.conf
 
