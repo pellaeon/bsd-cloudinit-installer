@@ -14,24 +14,23 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-def upload():
+def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE']):
     """
     create or update the ``env['OS_IMG_NAME']``
     """
     img_list = list(glance.images.list())
-    img_name = env['OS_IMG_NAME']
-    img_path = env['MD_FILE']
 
     img_args = {
         'name': img_name,
         'is_public': 'False',
         'disk_format': 'raw',
         'container_format': 'bare',
-        'description': "\r".join([ 
+        'description': "\r".join([
                 "uname: {0}".format(check_output(['uname', '-msKr']).strip('\n')),
                 "installer: {0}".format(env['INSTALLER_REV']),
             ]),
     }
+
     try:
         img = nova.images.find(name=img_name)
         logger.info('Old image {name} <{id}> exists.'.format(name=img.name, id=img.id))
