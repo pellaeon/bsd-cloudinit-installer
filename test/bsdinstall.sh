@@ -1,12 +1,13 @@
 #!/bin/sh
 
-cp $BSDINIT_INSTALLER_FILE /root/install.sh
+
+cp $BSDINIT_INSTALLER_FILE /root/installer.sh
 
 
 #!/bin/sh
 
 FETCH='fetch --no-verify-peer'
-INSTALLER='/root/install.sh'
+INSTALLER='/root/installer.sh'
 
 ##############################################
 #  utils
