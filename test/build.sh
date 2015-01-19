@@ -120,6 +120,15 @@ boot_img() { #{{{
 	python2 $BUILDER_DIR/tools/compute.py
 } #}}}
 
+usage() { #{{{
+	echo "Usage $0: [command]"
+	printf "\tcommands:\n"
+	for i in "clean" "mount" "umount" "chroot" "upload [image file]" "boot"
+	do
+		printf "\t\t$i\n"
+	done
+} #}}}
+
 
 ##############################################
 #  main block
@@ -169,6 +178,11 @@ do
 			;;
 		-- )
 			shift
+			;;
+		* )
+			trap : 0 1 2 15
+			usage
+			exit 1
 			;;
 	esac
 done
