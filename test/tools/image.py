@@ -7,6 +7,7 @@ from subprocess import check_output
 from os import environ as env
 
 from novaclient.exceptions import NotFound
+
 from service import glance, nova
 
 

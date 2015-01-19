@@ -123,7 +123,7 @@ boot_img() { #{{{
 usage() { #{{{
 	echo "Usage $0: [command]"
 	printf "\tcommands:\n"
-	for i in "clean" "mount" "umount" "chroot" "upload [image file]" "boot"
+	for i in "clean" "mount" "umount" "chroot" "upload [image file]" "boot [vm name]"
 	do
 		printf "\t\t$i\n"
 	done
@@ -214,3 +214,5 @@ env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/inc
 $PIP install -r $PIP_REQUIREMENTS
 
 upload_img
+
+boot
