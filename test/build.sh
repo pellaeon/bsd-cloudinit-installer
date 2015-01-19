@@ -117,7 +117,7 @@ upload_img() { #{{{
 } #}}}
 
 boot_img() { #{{{
-	python2 $BUILDER_DIR/tools/compute.py
+	python2 $BUILDER_DIR/tools/compute.py $1
 } #}}}
 
 usage() { #{{{
@@ -173,7 +173,7 @@ do
 			;;
 		boot )
 			trap : 0
-			boot_img
+			boot_img $2
 			exit 0
 			;;
 		-- )
