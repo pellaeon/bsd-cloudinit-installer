@@ -38,7 +38,7 @@ def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE'], img_format=
         'is_public': 'False',
         'disk_format': disk_format,
         'container_format': 'bare',
-        'description': "\r".join([
+        'description': " | ".join([
                 "uname: {0}".format(check_output(['uname', '-msKr']).strip('\n')),
                 "installer: {0}".format(env['INSTALLER_REV']),
             ]),
