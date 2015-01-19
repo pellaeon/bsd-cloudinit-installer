@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-cp $BSDINIT_INSTALLER_FILE "$BSDINSTALL_CHROOT/installer.sh"
+BSDINIT_INSTALLER_FILE="`/usr/bin/openssl enc -base64 < $BSDINIT_INSTALLER_FILE`"
 
 
 #!/bin/sh
@@ -26,7 +26,7 @@ trap 'cleanup' 0 1 2 15
 
 set -e
 
-mv '/installer.sh' $INSTALLER
+echo "$BSDINIT_INSTALLER_FILE" | /usr/bin/openssl enc -base64 -d > $INSTALLER
 
 echo 'nameserver 8.8.8.8' > /etc/resolv.conf
 
