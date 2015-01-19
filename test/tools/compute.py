@@ -31,7 +31,7 @@ def boot(image_name=env['OS_IMG_NAME'], flavor_name=env['OS_FLAVOR'],
     logging.info('instance flavor: {}'.format(pformat(instance.flavor)))
     logging.info('instance net: {}'.format(pformat(instance.networks)))
     logging.info('instance image: {}'.format(pformat(instance.image)))
-    logging.info('instance status: {}'.format(instance.status)
+    logging.info('instance status: {}'.format(instance.status))
 
 
 if __name__ == '__main__':

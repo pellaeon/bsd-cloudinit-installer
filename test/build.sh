@@ -216,4 +216,4 @@ $PIP install -r $PIP_REQUIREMENTS
 
 upload_img
 
-boot
+boot_img
