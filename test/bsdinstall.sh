@@ -28,10 +28,10 @@ echo 'nameserver 8.8.8.8' > /etc/resolv.conf
 gpart modify -i 2 -l rootfs $MD_DEV
 sed -i '' "s/${MD_DEV}p2/gpt\/rootfs/" /etc/fstab
 
-echo '/etc/fstab'
+echo 'content of /etc/fstab'
 cat /etc/fstab
 echo '================================'
-echo '/etc/resolv.conf'
+echo 'content of /etc/resolv.conf'
 cat /etc/resolv.conf
 
 # testing network

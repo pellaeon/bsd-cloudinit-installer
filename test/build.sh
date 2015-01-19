@@ -112,6 +112,9 @@ attach_md() { #{{{
 	mdconfig -l -u $MD_UNIT
 } #}}}
 
+upload_img() { #{{{
+	python2 $BUILDER_DIR/tools/image.py
+} #}}}
 
 
 ##############################################
@@ -150,6 +153,11 @@ do
 			chroot $BSDINSTALL_CHROOT tcsh
 			exit 0
 			;;
+		upload )
+			trap : 0
+			upload_img
+			exit 0
+			;;
 		-- )
 			shift
 			;;
@@ -182,5 +190,4 @@ $PIP install --upgrade pip
 env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" $PIP install cryptography
 $PIP install -r $PIP_REQUIREMENTS
 
-# upload image
-python $BUILDER_DIR/tools/image.py
+upload_img
