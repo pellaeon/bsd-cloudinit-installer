@@ -1,7 +1,5 @@
 #!/bin/sh
 
-export BSDINIT_INSTALLER_URL='https://raw.githubusercontent.com/pellaeon/bsd-cloudinit-installer/master/installer.sh'
-
 # openstack
 OS_RC="$BUILDER_DIR/openstackrc.sh"
 export OS_IMG_NAME="fls-testing-build-`uname -K`"

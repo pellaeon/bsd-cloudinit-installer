@@ -1,3 +1,7 @@
+#!/bin/sh
+
+cp $BSDINIT_INSTALLER_FILE /root/install.sh
+
 
 #!/bin/sh
 
@@ -38,15 +42,6 @@ echo 'content of /etc/resolv.conf'
 cat /etc/resolv.conf
 
 # testing network
-ping -c 5 8.8.8.8
+ping -c 3 8.8.8.8
 
-# install bsd cloudinit
-
-if [ ! $BSDINIT_INSTALLER_URL ]
-then
-	echo 'Installer url not found.'
-	exit 1
-fi
-
-$FETCH -o $INSTALLER $BSDINIT_INSTALLER_URL
 sh -e $INSTALLER
