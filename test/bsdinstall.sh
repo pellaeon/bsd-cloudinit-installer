@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-cp $BSDINIT_INSTALLER_FILE /root/installer.sh
+cp $BSDINIT_INSTALLER_FILE "$BSDINSTALL_CHROOT/root/installer.sh"
 
 
 #!/bin/sh
