@@ -111,7 +111,7 @@ do
 	esac
 done
 # Enabel sshd in rc.conf
-if ! /usr/bin/egrep '^sshd_enable' > /dev/null
+if ! /usr/bin/egrep '^sshd_enable' $RC_CONF > /dev/null
 then
 	echo 'sshd_enable="YES"' >> $RC_CONF
 fi
