@@ -5,6 +5,6 @@ OS_RC="$BUILDER_DIR/openstackrc.sh"
 export OS_IMG_NAME="fls-testing-build-`uname -K`"
 export OS_IMG_FILE=$MD_FILE
 export OS_FLAVOR='<flavor-name>'
-export VM_NET='<network-label>'
+export OS_NET='<network-label>'
 export OS_VM_NAME="fls-tester-`uname -K`"
 export OS_KEYPAIR='fls'
