@@ -130,6 +130,20 @@ usage() { #{{{
 	done
 } #}}}
 
+install_os() {
+	bsdinstall checksum
+	if [ $? -ne 0 ] || [ ! -f $BSDINSTALL_DISTDIR/kernel.txz ] || [ ! -f $BSDINSTALL_DISTDIR/base.txz ]
+	then
+		$MKDIR $BSDINSTALL_DISTDIR
+		bsdinstall distfetch
+	fi
+	bsdinstall scriptedpart $PARTITIONS
+	bsdinstall script $BSDINSTALL_SCRIPT || {
+		cleanup
+		exit 1
+	}
+}
+
 
 ##############################################
 #  main block
@@ -177,6 +191,14 @@ do
 			boot_img $2
 			exit 0
 			;;
+		install )
+			trap : 0
+			umount_base
+			umount_md
+			attach_md
+			install_os
+			exit 0
+			;;
 		-- )
 			shift
 			;;
@@ -194,18 +216,7 @@ $MKDIR $TEST_BASE_DIR
 
 attach_md
 
-# bsdinstall script
-bsdinstall checksum
-if [ $? -ne 0 ] || [ ! -f $BSDINSTALL_DISTDIR/kernel.txz ] || [ ! -f $BSDINSTALL_DISTDIR/base.txz ]
-then
-	$MKDIR $BSDINSTALL_DISTDIR
-	bsdinstall distfetch
-fi
-bsdinstall scriptedpart $PARTITIONS
-bsdinstall script $BSDINSTALL_SCRIPT || {
-	cleanup
-	exit 1
-}
+install_os
 
 # prepare virtualenv and pip
 virtualenv $VENV_DIR
@@ -213,6 +224,9 @@ virtualenv $VENV_DIR
 $PIP install --upgrade pip
 env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" $PIP install cryptography
 $PIP install -r $PIP_REQUIREMENTS
+
+umount_base
+umount_md
 
 upload_img
 
