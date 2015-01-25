@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import logging
 
+from datetime import datetime
 from pprint import pprint, pformat
 from subprocess import check_output
 from os import environ as env
@@ -41,6 +42,7 @@ def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE'], img_format=
         'description': " | ".join([
                 "uname: {0}".format(check_output(['uname', '-msKr']).strip('\n')),
                 "installer: {0}".format(env['INSTALLER_REV']),
+                "upload time: {0}".format(datetime.now()),
             ]),
     }
 
