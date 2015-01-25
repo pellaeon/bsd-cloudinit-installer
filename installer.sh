@@ -75,12 +75,12 @@ pkg install $INSTALL_PKGS
 	echo 'python2.7 Not Found !'
 	exit 1
 }
-PYTHON=`which python2.7`
 
 $FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
 
 virtualenv $VENV_DIR
 . "$VENV_DIR/bin/activate"
+PYTHON="$VENV_DIR/bin/python"
 pip install -r "$WORKING_DIR/bsd-cloudinit-master/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
@@ -89,7 +89,6 @@ touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
 echo_bsdinit_stamp >> $RC_SCRIPT_FILE
 echo "(
-	. "$VENV_DIR/bin/activate"
 	$PYTHON $WORKING_DIR/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log
 	cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE
 )" >> $RC_SCRIPT_FILE
