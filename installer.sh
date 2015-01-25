@@ -25,7 +25,7 @@ FETCH="fetch ${VERIFY_PEER}"
 
 INSTALL_PKGS='
 	lang/python27
-	devel/virtualenv
+	devel/py-virtualenv
 	security/sudo
 	security/ca_root_nss
 	'
