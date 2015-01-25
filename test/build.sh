@@ -218,7 +218,7 @@ attach_md
 
 install_os
 
-# prepare virtualenv and pip
+# prepare virtualenv and pip for access openstack command line clients
 virtualenv $VENV_DIR
 . $VENV_DIR/bin/activate
 $PIP install --upgrade pip

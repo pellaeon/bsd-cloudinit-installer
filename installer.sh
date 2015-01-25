@@ -13,6 +13,8 @@ RC_SCRIPT_FILE='/etc/rc.local'
 RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 LOADER_CONF='/boot/loader.conf'
+WORKING_DIR='/root'
+VENV_DIR="$WORKING_DIR/.venv"
 
 # bsd cloudinit
 BSDINIT_URL='https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz'
@@ -23,7 +25,7 @@ FETCH="fetch ${VERIFY_PEER}"
 
 INSTALL_PKGS='
 	lang/python27
-	devel/py-pip
+	devel/virtualenv
 	security/sudo
 	security/ca_root_nss
 	'
@@ -75,17 +77,22 @@ pkg install $INSTALL_PKGS
 }
 PYTHON=`which python2.7`
 
-$FETCH -o - $BSDINIT_URL | tar -xzvf - -C '/root'
+$FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
 
-pip install -r '/root/bsd-cloudinit-master/requirements.txt'
+virtualenv $VENV_DIR
+. "$VENV_DIR/bin/activate"
+pip install -r "$WORKING_DIR/bsd-cloudinit-master/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
 
 touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
 echo_bsdinit_stamp >> $RC_SCRIPT_FILE
-echo "$PYTHON /root/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log" >> $RC_SCRIPT_FILE
-echo "cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE " >> $RC_SCRIPT_FILE
+echo "(
+	. "$VENV_DIR/bin/activate"
+	$PYTHON $WORKING_DIR/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log
+	cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE
+)" >> $RC_SCRIPT_FILE
 
 # Output to OpenStack console log
 echo_bsdinit_stamp >> $LOADER_CONF
