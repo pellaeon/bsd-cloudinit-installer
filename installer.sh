@@ -81,6 +81,7 @@ $FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
 virtualenv $VENV_DIR
 . "$VENV_DIR/bin/activate"
 PYTHON="$VENV_DIR/bin/python"
+pip install --upgrade pip
 pip install -r "$WORKING_DIR/bsd-cloudinit-master/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
