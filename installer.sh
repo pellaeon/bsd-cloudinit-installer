@@ -102,6 +102,11 @@ echo 'console="comconsole,vidconsole"' >> $LOADER_CONF
 # Bootloader menu delay
 echo 'autoboot_delay="1"' >> $LOADER_CONF
 
+if [ $BSDINIT_DEBUG ]
+then
+	sed -I '' '/^console/d' $LOADER_CONF
+fi
+
 echo_bsdinit_stamp >> $RC_CONF
 # Get the active NIC and set it to use dhcp
 for i in `ifconfig -u -l`

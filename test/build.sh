@@ -15,6 +15,7 @@ TEST_BASE_DIR="${BUILDER_DIR}/base"
 # bsd cloudinit info
 export INSTALLER_REV=`(cd ${BUILDER_DIR} && git rev-parse --short  HEAD)`
 export BSDINIT_INSTALLER_FILE="$BUILDER_DIR/../installer.sh"
+export BSDINIT_DEBUG=yes
 
 # md
 MD_UNIT=0
