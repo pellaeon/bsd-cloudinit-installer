@@ -14,6 +14,7 @@ INSTALLER='/root/installer.sh'
 
 cleanup(){ #{{{
 	rm -v /etc/resolv.conf
+	rm -v $INSTALLER
 	exit
 } #}}}
 
