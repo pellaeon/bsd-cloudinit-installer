@@ -92,6 +92,8 @@ echo_bsdinit_stamp >> $RC_SCRIPT_FILE
 echo "(
 	$PYTHON $WORKING_DIR/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log
 	cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE
+	rm -r $WORKING_DIR/bsd-cloudinit-master
+	rm $RC_BACKUP_FILE
 )" >> $RC_SCRIPT_FILE
 
 # Output to OpenStack console log
