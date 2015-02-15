@@ -124,7 +124,8 @@ boot_img() { #{{{
 usage() { #{{{
 	echo "Usage $0: [command]"
 	printf "\tcommands:\n"
-	for i in "clean" "mount" "umount" "chroot" "upload [image file]" "boot [vm name]"
+	for i in "clean" "mount" "umount" "chroot" "upload [image file]"\
+		"boot [vm name]" "install"
 	do
 		printf "\t\t$i\n"
 	done
