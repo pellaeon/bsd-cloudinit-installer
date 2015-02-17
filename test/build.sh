@@ -15,7 +15,6 @@ TEST_BASE_DIR="${BUILDER_DIR}/base"
 # bsd cloudinit info
 export INSTALLER_REV=`(cd ${BUILDER_DIR} && git rev-parse --short  HEAD)`
 export BSDINIT_INSTALLER_FILE="$BUILDER_DIR/../installer.sh"
-export BSDINIT_DEBUG=yes
 
 # md
 MD_UNIT=0
@@ -123,7 +122,12 @@ boot_img() { #{{{
 } #}}}
 
 usage() { #{{{
-	echo "Usage $0: [command]"
+	echo "Usage $0: [options] [command]"
+	printf "\toptions:\n"
+	for i in "-d -- build debug image"
+	do
+		printf "\t\t$i\n"
+	done
 	printf "\tcommands:\n"
 	for i in "clean" "mount" "umount" "chroot" "upload [image file]"\
 		"boot [vm name]" "install"
@@ -153,7 +157,7 @@ install_os() {
 
 trap 'cleanup' 0 1 2 15
 
-args=`getopt t: $*`
+args=`getopt d $*`
 
 if [ $? -ne 0 ]
 then
@@ -162,6 +166,11 @@ fi
 while [ $1 ]
 do
 	case $1 in
+		-d )
+			export BSDINIT_DEBUG=yes
+			echo "Build debug image."
+			shift
+			;;
 		clean )
 			exit 0;
 			;;
