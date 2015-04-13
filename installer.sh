@@ -29,6 +29,7 @@ INSTALL_PKGS='
 	devel/py-virtualenv
 	devel/py-babel
 	devel/py-greenlet
+	net/py-netifaces
 	security/sudo
 	security/ca_root_nss
 	'
