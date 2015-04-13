@@ -27,6 +27,8 @@ FETCH="fetch ${VERIFY_PEER}"
 INSTALL_PKGS='
 	lang/python27
 	devel/py-virtualenv
+	devel/py-babel
+	devel/py-greenlet
 	security/sudo
 	security/ca_root_nss
 	'
@@ -80,7 +82,7 @@ pkg install $INSTALL_PKGS
 
 $FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
 
-virtualenv $VENV_DIR
+virtualenv $VENV_DIR --system-site-packages
 . "$VENV_DIR/bin/activate"
 PYTHON="$VENV_DIR/bin/python"
 pip install --upgrade pip
