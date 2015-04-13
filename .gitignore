@@ -5,3 +5,4 @@ test/*.conf
 test/dist
 .venv
 openstackrc.sh
+post_install.sh

@@ -14,7 +14,8 @@ RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 LOADER_CONF='/boot/loader.conf'
 WORKING_DIR='/root'
-VENV_DIR="$WORKING_DIR/.venv"
+BSDINIT_DIR="$WORKING_DIR/bsd-cloudinit-master"
+VENV_DIR="$BSDINIT_DIR/.venv"
 
 # bsd cloudinit
 BSDINIT_URL='https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz'
@@ -59,6 +60,7 @@ fi
 if [ $BSDINIT_DEBUG ]
 then
 	echo_debug "BSD_VERSION = $BSD_VERSION"
+	BSDINIT_SCRIPT_DEBUG_FLAG='--debug'
 fi
 
 # Raise unsupport error
@@ -82,7 +84,7 @@ virtualenv $VENV_DIR
 . "$VENV_DIR/bin/activate"
 PYTHON="$VENV_DIR/bin/python"
 pip install --upgrade pip
-pip install -r "$WORKING_DIR/bsd-cloudinit-master/requirements.txt"
+pip install -r "$BSDINIT_DIR/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
 
@@ -90,9 +92,9 @@ touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
 echo_bsdinit_stamp >> $RC_SCRIPT_FILE
 echo "(
-	$PYTHON $WORKING_DIR/bsd-cloudinit-master/run.py --log-file /tmp/cloudinit.log
+	$PYTHON $BSDINIT_DIR/run.py --log-file /tmp/cloudinit.log $BSDINIT_SCRIPT_DEBUG_FLAG
 	cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE
-	rm -r $WORKING_DIR/bsd-cloudinit-master
+	rm -r $BSDINIT_DIR
 	rm $RC_BACKUP_FILE
 )" >> $RC_SCRIPT_FILE
 

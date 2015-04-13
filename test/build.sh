@@ -136,7 +136,7 @@ usage() { #{{{
 	done
 } #}}}
 
-install_os() {
+install_os() { #{{{
 	bsdinstall checksum
 	if [ $? -ne 0 ] || [ ! -f $BSDINSTALL_DISTDIR/kernel.txz ] || [ ! -f $BSDINSTALL_DISTDIR/base.txz ]
 	then
@@ -148,7 +148,16 @@ install_os() {
 		cleanup
 		exit 1
 	}
-}
+} #}}}
+
+post_install_os(){ #{{{
+	if [ $BSDINIT_DEBUG ]
+	then
+		bsdinstall mount
+		sh ${BUILDER_DIR}/post_install.sh
+		$0 umount
+	fi
+} #}}}
 
 
 ##############################################
@@ -228,6 +237,8 @@ $MKDIR $TEST_BASE_DIR
 attach_md
 
 install_os
+
+post_install_os
 
 # prepare virtualenv and pip for access openstack command line clients
 virtualenv $VENV_DIR
