@@ -83,7 +83,7 @@ $FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
 virtualenv $VENV_DIR
 . "$VENV_DIR/bin/activate"
 PYTHON="$VENV_DIR/bin/python"
-pip install --upgrade pip
+pip install --upgrade --force-reinstall pip
 pip install -r "$BSDINIT_DIR/requirements.txt"
 
 rm -vf $SSH_DIR/ssh_host*
