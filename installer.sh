@@ -5,9 +5,12 @@
 ##############################################
 
 usage() {
-	echo "Usage: $0 [-r ref]"
+	echo "Usage: $0 [-dh] [-r ref]"
 	echo '       Options:'
-	echo '           -r ref: A valid git reference. Default is ``master``.'
+	echo '           -d:      Debug mode: verbose output, and disable self-removing'
+	echo '                    for ``bsd-cloudinit`` script dir.'
+	echo '           -h:      Show this help message.'
+	echo '           -r ref:  A valid git reference. Default is ``master``.'
 }
 
 args=`getopt hdr: $*`
