@@ -3,6 +3,11 @@
 
 BSDINIT_INSTALLER_FILE="`/usr/bin/openssl enc -base64 < $BSDINIT_INSTALLER_FILE`"
 
+if [ $GIT_REF ]
+then
+	INSTALLER_FLAGS="-r $GIT_REF"
+fi
+
 
 #!/bin/sh
 
@@ -47,4 +52,4 @@ cat /etc/resolv.conf
 # testing network
 ping -c 3 8.8.8.8
 
-sh -e $INSTALLER
+sh -e $INSTALLER $INSTALLER_FLAGS

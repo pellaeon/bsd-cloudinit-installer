@@ -166,7 +166,7 @@ post_install_os(){ #{{{
 
 trap 'cleanup' 0 1 2 15
 
-args=`getopt d $*`
+args=`getopt dr: $*`
 
 if [ $? -ne 0 ]
 then
@@ -178,6 +178,12 @@ do
 		-d )
 			export BSDINIT_DEBUG=yes
 			echo "Build debug image."
+			shift
+			;;
+		-r )
+			shift
+			export GIT_REF=$1
+			echo "Build ref:${GIT_REF}"
 			shift
 			;;
 		clean )

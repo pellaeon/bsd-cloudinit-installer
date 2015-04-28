@@ -1,8 +1,52 @@
 #!/bin/sh
 
 ##############################################
+#  Handle options
+##############################################
+
+usage() {
+	echo "Usage: $0 [-r ref]"
+	echo '       Options:'
+	echo '           -r ref: A valid git reference, Default is master.'
+}
+
+args=`getopt hdr: $*`
+
+if [ $? -ne 0 ]
+then
+	usage
+	exit 1
+fi
+while [ $1 ]
+do
+	case $1 in
+		-d )
+			BSDINIT_DEBUG=yes
+			shift
+			;;
+		-h )
+			usage
+			exit 0
+			;;
+		-r )
+			shift
+			GIT_REF=$1
+			shift
+			;;
+		* )
+			echo $1 '?!'
+			shift
+			;;
+	esac
+done
+
+
+##############################################
 #  variables
 ##############################################
+
+# args
+GIT_REF=${GIT_REF:-'master'}
 
 # env
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
@@ -14,11 +58,11 @@ RC_BACKUP_FILE='/etc/rc.local.bak'
 RC_CONF='/etc/rc.conf'
 LOADER_CONF='/boot/loader.conf'
 WORKING_DIR='/root'
-BSDINIT_DIR="$WORKING_DIR/bsd-cloudinit-master"
+BSDINIT_DIR="$WORKING_DIR/bsd-cloudinit"
 VENV_DIR="$BSDINIT_DIR/.venv"
 
 # bsd cloudinit
-BSDINIT_URL='https://github.com/pellaeon/bsd-cloudinit/archive/master.tar.gz'
+BSDINIT_URL="https://api.github.com/repos/pellaeon/bsd-cloudinit/tarball/$GIT_REF"
 
 # commands
 VERIFY_PEER='--ca-cert=/usr/local/share/certs/ca-root-nss.crt'
@@ -78,7 +122,15 @@ pkg install $INSTALL_PKGS
 	exit 1
 }
 
-$FETCH -o - $BSDINIT_URL | tar -xzvf - -C $WORKING_DIR
+if [ $BSDINIT_DEBUG ]
+then
+	TAR_VERBOSE='-v'
+fi
+
+echo "Fetching ref=$GIT_REF and extract tarball to $BSDINIT_DIR ..."
+mkdir -p $BSDINIT_DIR
+$FETCH -o - $BSDINIT_URL | tar -xzf - -C $BSDINIT_DIR --strip-components 1 $TAR_VERBOSE
+echo 'Done'
 
 virtualenv $VENV_DIR
 . "$VENV_DIR/bin/activate"
