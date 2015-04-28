@@ -116,17 +116,18 @@ fi
 
 echo_bsdinit_stamp >> $RC_CONF
 # Get the active NIC and set it to use dhcp
-for i in `ifconfig -u -l`
+for i in `ifconfig -u -l ether`
 do
 	case $i in
-		'lo0')
-			;;
-		'plip0')
-			;;
-		'pflog0')
+		'lo0' | 'plip0' | 'pflog0')
 			;;
 		*)
 			echo 'ifconfig_'${i}'="DHCP"' >> $RC_CONF
+			# Add vtnet0 as default
+			if [ $i != 'vtnet0' ]
+			then
+				echo 'ifconfig_vtnet0="DHCP"' >> $RC_CONF
+			fi
 			break;
 			;;
 	esac
