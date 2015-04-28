@@ -7,7 +7,7 @@
 usage() {
 	echo "Usage: $0 [-r ref]"
 	echo '       Options:'
-	echo '           -r ref: A valid git reference, Default is master.'
+	echo '           -r ref: A valid git reference. Default is ``master``.'
 }
 
 args=`getopt hdr: $*`
