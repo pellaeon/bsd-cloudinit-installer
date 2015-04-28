@@ -34,7 +34,6 @@ do
 			shift
 			;;
 		* )
-			echo $1 '?!'
 			shift
 			;;
 	esac
