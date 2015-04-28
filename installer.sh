@@ -98,6 +98,11 @@ echo "(
 	rm $RC_BACKUP_FILE
 )" >> $RC_SCRIPT_FILE
 
+if [ $BSDINIT_DEBUG ]
+then
+	sed -I '' '/rm\ -r/d' $RC_SCRIPT_FILE
+fi
+
 # Output to OpenStack console log
 echo_bsdinit_stamp >> $LOADER_CONF
 echo 'console="comconsole,vidconsole"' >> $LOADER_CONF
