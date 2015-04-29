@@ -2,7 +2,7 @@ from os import environ as env
 
 from glanceclient import Client as glclient
 import keystoneclient.v2_0.client as ksclient
-import novaclient.v1_1.client as nvclient
+import novaclient.v2.client as nvclient
 
 
 client_args = {
