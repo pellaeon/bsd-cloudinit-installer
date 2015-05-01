@@ -30,7 +30,7 @@ export PARTITIONS="$MD_DEV { auto freebsd-ufs / }"
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # virtualenv and openstack command line client
-VENV_DIR="$TEST_BASE_DIR/.venv"
+VENV_DIR="$BUILDER_DIR/.venv"
 PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
 PIP='pip'
 
