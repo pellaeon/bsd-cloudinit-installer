@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import logging
-
 from datetime import datetime
 from pprint import pprint, pformat
 from subprocess import check_output
@@ -11,9 +9,6 @@ from novaclient.exceptions import NotFound
 
 from service import glance, nova
 
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE'], img_format=None):
@@ -70,7 +65,12 @@ def upload(img_name=env['OS_IMG_NAME'], img_path=env['OS_IMG_FILE'], img_format=
 
 
 if __name__ == '__main__':
+    import logging
     from sys import argv
+
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(level=logging.DEBUG)
+
     try:
         upload(img_path=argv[1])
     except Exception as e:
