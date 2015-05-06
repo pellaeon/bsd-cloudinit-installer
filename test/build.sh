@@ -37,6 +37,9 @@ PIP='pip'
 . $BUILDER_CONF
 . $OS_RC
 
+# instance
+VM_BOOT_SLEEP_TIME=120
+
 ##############################################
 #  util functions
 ##############################################
@@ -153,10 +156,16 @@ install_os() { #{{{
 post_install_os(){ #{{{
 	if [ $BSDINIT_DEBUG ]
 	then
+		echo_box 'start post installation'
 		bsdinstall mount
 		sh ${BUILDER_DIR}/post_install.sh
 		$0 umount
+		echo_box 'post installation end'
 	fi
+} #}}}
+
+test_instance(){ #{{{
+	fab main
 } #}}}
 
 
@@ -225,6 +234,19 @@ do
 			install_os
 			exit 0
 			;;
+		postinstall)
+			trap : 0
+			umount_base
+			umount_md
+			attach_md
+			post_install_os
+			exit 0
+			;;
+		test_instance)
+			trap : 0
+			test_instance
+			exit 0
+			;;
 		-- )
 			shift
 			;;
@@ -259,3 +281,8 @@ umount_md
 upload_img
 
 boot_img
+
+# echo "Sleep $VM_BOOT_SLEEP_TIME for nova finishing booting ..."
+# sleep $VM_BOOT_SLEEP_TIME
+
+# test_instance
