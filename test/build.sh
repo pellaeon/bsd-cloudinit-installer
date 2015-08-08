@@ -9,7 +9,6 @@ RM='rm'
 MKDIR='mkdir -p'
 
 BUILDER_DIR=$(dirname `realpath $0`)
-BUILDER_CONF="${BUILDER_DIR}/build.conf"
 TEST_BASE_DIR="${BUILDER_DIR}/base"
 
 # bsd cloudinit info
@@ -28,14 +27,6 @@ export BSDINSTALL_CHROOT=$TEST_BASE_DIR
 export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
 export PARTITIONS="$MD_DEV { auto freebsd-ufs / }"
 BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
-
-# virtualenv and openstack command line client
-VENV_DIR="$BUILDER_DIR/.venv"
-PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
-PIP='pip'
-
-. $BUILDER_CONF
-. $OS_RC
 
 # instance
 VM_BOOT_SLEEP_TIME=120
@@ -89,21 +80,11 @@ clean_base() { #{{{
 	fi
 } #}}}
 
-clean_venv() { #{{{
-	if [ -e $VENV_DIR ]
-	then
-		printf 'remove virtualenv...'
-		$RM -r $VENV_DIR
-		echo 'done'
-	fi
-} #}}}
-
 cleanup() { #{{{
 	echo_box "Cleanup"
 	umount_base
 	umount_md
 	clean_base
-	clean_venv
 } #}}}
 
 attach_md() { #{{{
@@ -114,14 +95,6 @@ attach_md() { #{{{
 		exit 1
 	}
 	mdconfig -l -u $MD_UNIT
-} #}}}
-
-upload_img() { #{{{
-	python2 $BUILDER_DIR/tools/image.py $1
-} #}}}
-
-boot_img() { #{{{
-	python2 $BUILDER_DIR/tools/compute.py $1
 } #}}}
 
 usage() { #{{{
@@ -163,11 +136,6 @@ post_install_os(){ #{{{
 		echo_box 'post installation end'
 	fi
 } #}}}
-
-test_instance(){ #{{{
-	fab main
-} #}}}
-
 
 ##############################################
 #  main block
@@ -268,21 +236,5 @@ install_os
 
 post_install_os
 
-# prepare virtualenv and pip for access openstack command line clients
-virtualenv $VENV_DIR
-. $VENV_DIR/bin/activate
-$PIP install --upgrade pip
-env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" $PIP install cryptography
-$PIP install -r $PIP_REQUIREMENTS
-
 umount_base
 umount_md
-
-upload_img
-
-boot_img
-
-# echo "Sleep $VM_BOOT_SLEEP_TIME for nova finishing booting ..."
-# sleep $VM_BOOT_SLEEP_TIME
-
-# test_instance
