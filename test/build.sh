@@ -8,25 +8,8 @@
 RM='rm'
 MKDIR='mkdir -p'
 
-BUILDER_DIR=$(dirname `realpath $0`)
-TEST_BASE_DIR="${BUILDER_DIR}/base"
+. "tester.conf"
 
-# bsd cloudinit info
-export INSTALLER_REV=`(cd ${BUILDER_DIR} && git rev-parse --short  HEAD)`
-export BSDINIT_INSTALLER_FILE="$BUILDER_DIR/../installer.sh"
-
-# md
-MD_UNIT=0
-export MD_DEV="md${MD_UNIT}"
-export MD_FILE="${BUILDER_DIR}/tester.raw"
-
-# bsdinstall
-export DISTRIBUTIONS='kernel.txz base.txz'
-export BSDINSTALL_DISTSITE="ftp://ftp.tw.freebsd.org/pub/FreeBSD/releases/amd64/`uname -r`/"
-export BSDINSTALL_CHROOT=$TEST_BASE_DIR
-export BSDINSTALL_DISTDIR="${BUILDER_DIR}/dist"
-export PARTITIONS="$MD_DEV { auto freebsd-ufs / }"
-BSDINSTALL_SCRIPT="${BUILDER_DIR}/bsdinstall.sh"
 
 # instance
 VM_BOOT_SLEEP_TIME=120

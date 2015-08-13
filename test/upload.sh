@@ -1,15 +1,12 @@
 #/bin/sh
 
-BUILDER_DIR=$(dirname `realpath $0`)
-BUILDER_CONF="${BUILDER_DIR}/upload.conf"
-TEST_BASE_DIR="${BUILDER_DIR}/base"
+. "tester.conf"
 
 # virtualenv and openstack command line client
 VENV_DIR="$BUILDER_DIR/.venv"
 PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
 PIP='pip'
 
-. $BUILDER_CONF
 . $OS_RC
 
 clean_venv() { #{{{
