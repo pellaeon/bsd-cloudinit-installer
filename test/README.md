@@ -23,4 +23,4 @@ First, download OpenStack RC file and place it in this directory, name it as `op
 
 Then run `upload.sh` , it will upload the image and spin up an instance from that image.
 
-	./upload.sh
+	sh upload.sh
