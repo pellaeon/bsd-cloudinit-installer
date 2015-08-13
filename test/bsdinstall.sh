@@ -5,7 +5,7 @@
 # Instead of downloading bsd-cloudinit-installer directly in the chroot,
 # this approach allows you to modify bsd-cloudinit-installer/installer.sh
 # and test it using this script.
-FLS_INSTALLER_CONTENT="`/usr/bin/openssl enc -base64 < $BSDINIT_INSTALLER_FILE`"
+export FLS_INSTALLER_CONTENT="`/usr/bin/openssl enc -base64 < $BSDINIT_INSTALLER_FILE`"
 
 if [ $GIT_REF ]
 then
