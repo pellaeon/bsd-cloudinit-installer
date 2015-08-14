@@ -159,7 +159,7 @@ fi
 
 # Output to OpenStack console log
 echo_bsdinit_stamp >> $LOADER_CONF
-echo 'console="comconsole,vidconsole"' >> $LOADER_CONF
+echo 'console="vidconsole,comconsole"' >> $LOADER_CONF
 # Bootloader menu delay
 echo 'autoboot_delay="1"' >> $LOADER_CONF
 
