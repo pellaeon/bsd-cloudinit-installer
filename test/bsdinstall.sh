@@ -23,7 +23,7 @@ INSTALLER_PATH='/root/installer.sh'
 
 cleanup(){ #{{{
 	rm -v /etc/resolv.conf
-	rm -v $INSTALLER
+	rm -v $INSTALLER_PATH
 	exit
 } #}}}
 
