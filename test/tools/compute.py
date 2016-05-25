@@ -1,4 +1,5 @@
 import logging
+import time
 
 from pprint import pformat
 from os import environ as env
@@ -38,7 +39,14 @@ def boot(image_name=env['OS_IMG_NAME'], flavor_name=env['OS_FLAVOR'],
     logging.info('instance flavor: {}'.format(pformat(instance.flavor)))
     logging.info('instance net: {}'.format(pformat(instance.networks)))
     logging.info('instance image: {}'.format(pformat(instance.image)))
-    logging.info('instance status: {}'.format(instance.status))
+    logging.info('======== Waiting for instance to become active ========')
+    instance = get_instance(name=vm_name)
+    while instance.status != u'ACTIVE':
+            if instance.status == u'ERROR':
+                raise Exception('Instance errored')
+            logging.info('instance status: {}'.format(instance.status))
+            time.sleep(10)
+            instance = get_instance(name=vm_name)
     ip = instance.networks.values()[0][0]
     logging.info('instance ip: {}'.format(instance.networks.values()[0][0]))
 
