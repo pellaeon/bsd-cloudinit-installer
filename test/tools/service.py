@@ -2,16 +2,13 @@ from os import environ as env
 
 from glanceclient import Client as glclient
 import keystoneclient.v2_0.client as ksclient
-import novaclient.v2.client as nvclient
+import novaclient.client as nvclient
 
 
 client_args = {
         }
 
-nova = nvclient.Client(auth_url=env['OS_AUTH_URL'],
-        username=env['OS_USERNAME'],
-        api_key=env['OS_PASSWORD'],
-        project_id=env['OS_TENANT_NAME'])
+nova = nvclient.Client('2', env['OS_USERNAME'], env['OS_PASSWORD'], env['OS_TENANT_NAME'], env['OS_AUTH_URL'])
 
 keystone = ksclient.Client(auth_url=env['OS_AUTH_URL'],
         username=env['OS_USERNAME'],
