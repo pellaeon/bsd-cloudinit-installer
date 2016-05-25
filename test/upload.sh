@@ -7,7 +7,7 @@ VENV_DIR="$BUILDER_DIR/.venv"
 PIP_REQUIREMENTS="${BUILDER_DIR}/pip_requirements.txt"
 PIP='pip'
 
-. $OS_RC
+[ -f $OS_RC ] && . $OS_RC
 
 clean_venv() { #{{{
 	if [ -e $VENV_DIR ]
