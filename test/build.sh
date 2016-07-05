@@ -71,6 +71,7 @@ cleanup() { #{{{
 } #}}}
 
 attach_md() { #{{{
+	truncate -s 1124M "$MD_FILE"
 	# attach memory disk
 	mdconfig -f $MD_FILE -u $MD_UNIT
 	[ $? -ne 0 ] && {
