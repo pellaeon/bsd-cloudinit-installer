@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 ##############################################
 #  variables
 ##############################################
@@ -13,6 +15,8 @@ MKDIR='mkdir -p'
 
 # instance
 VM_BOOT_SLEEP_TIME=120
+
+SUDO='sudo -E'
 
 ##############################################
 #  util functions
@@ -103,8 +107,8 @@ install_os() { #{{{
 		$MKDIR $BSDINSTALL_DISTDIR
 		bsdinstall distfetch
 	fi
-	bsdinstall scriptedpart $PARTITIONS
-	bsdinstall script $BSDINSTALL_SCRIPT || {
+	$SUDO bsdinstall scriptedpart $PARTITIONS
+	$SUDO bsdinstall script $BSDINSTALL_SCRIPT || {
 		cleanup
 		exit 1
 	}
@@ -114,7 +118,7 @@ post_install_os(){ #{{{
 	if [ $BSDINIT_DEBUG ]
 	then
 		echo_box 'start post installation'
-		bsdinstall mount
+		$SUDO bsdinstall mount
 		sh ${BUILDER_DIR}/post_install.sh
 		$0 umount
 		echo_box 'post installation end'
@@ -154,7 +158,7 @@ do
 			trap : 0
 			$MKDIR $TEST_BASE_DIR
 			attach_md
-			bsdinstall mount
+			$SUDO bsdinstall mount
 			exit 0
 			;;
 		umount )
