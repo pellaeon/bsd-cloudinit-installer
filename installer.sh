@@ -146,9 +146,9 @@ touch $RC_SCRIPT_FILE
 cp -pf $RC_SCRIPT_FILE $RC_BACKUP_FILE
 echo_bsdinit_stamp >> $RC_SCRIPT_FILE
 echo "(
-	$PYTHON $BSDINIT_DIR/run.py --log-file /tmp/cloudinit.log $BSDINIT_SCRIPT_DEBUG_FLAG
+	$PYTHON $BSDINIT_DIR/run.py --config-file /etc/cloudinit.conf --log-file /tmp/cloudinit.log $BSDINIT_SCRIPT_DEBUG_FLAG
 	cp -pf $RC_BACKUP_FILE $RC_SCRIPT_FILE
-	rm -r $BSDINIT_DIR
+	#rm -r $BSDINIT_DIR
 	rm $RC_BACKUP_FILE
 )" >> $RC_SCRIPT_FILE
 
